@@ -369,6 +369,14 @@ def spawn(sim_mode, world_name, models, robot=None):
                 output='screen',
             ))
 
+            # thruster model node for translating normalized commands to force (Richards curve)
+            if model.is_USV():
+                nodes.append(Node(
+                    package='vrx_ros',
+                    executable='thruster_model_node.py',
+                    output='screen',
+                ))
+
             # robot_state_publisher (tf for wamv)
             model_dir = os.path.join(get_package_share_directory('vrx_gazebo'), 'models/wamv/tmp')
             urdf_file = os.path.join(model_dir, 'model.urdf')

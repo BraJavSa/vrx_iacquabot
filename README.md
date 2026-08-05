@@ -22,7 +22,15 @@ Where the parameters are configured as follows:
 
 Commands inside the deadband $|u| \le 0.01$ output exactly $0.0\text{ N}$.
 
+### Build and Launch Instructions
 
+To compile the workspace and launch the simulation environment with Nvidia GPU offloading:
+
+```bash
+colcon build --merge-install --symlink-install
+source install/setup.bash
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia ros2 launch vrx_gz competition.launch.py
+```
 
 ## Reference
 
