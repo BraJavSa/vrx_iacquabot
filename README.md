@@ -29,6 +29,9 @@ To compile the workspace and launch the simulation environment with Nvidia GPU o
 ```bash
 colcon build --merge-install --symlink-install
 source install/setup.bash
+```
+For launch:
+```
 __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia ros2 launch vrx_gz competition.launch.py
 ```
 
