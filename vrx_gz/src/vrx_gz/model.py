@@ -236,8 +236,15 @@ class Model:
         xacro_command.append(self.urdf)
         xacro_command.append(f'namespace:={self.model_name}')
         xacro_command.append(f'locked:=true')
-        xacro_command.append(f'vrx_sensors_enabled:=true')
-        xacro_command.append(f'thruster_config:=H')
+        xacro_command.append(f'vrx_sensors_enabled:=false')
+        xacro_command.append(f'camera_enabled:=true')
+        xacro_command.append(f'gps_enabled:=false')
+        xacro_command.append(f'imu_enabled:=true')
+        xacro_command.append(f'ground_truth_enabled:=true')
+        xacro_command.append(f'lidar_enabled:=false')
+        xacro_command.append(f'pinger_enabled:=false')
+        xacro_command.append(f'ball_shooter_enabled:=false')
+        xacro_command.append(f'thruster_config:=X')
         xacro_process = subprocess.Popen(xacro_command,
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.PIPE)

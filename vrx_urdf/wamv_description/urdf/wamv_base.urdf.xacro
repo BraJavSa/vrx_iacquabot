@@ -117,9 +117,9 @@
     </collision>
 
     <inertial>
-      <!-- From WAM-V spec sheet -->
-      <mass value="180.0"/>
-      <inertia ixx="120.0" ixy="0.0" ixz="0.0" iyy="393" iyz="0.0" izz="446.0"/>
+      <!-- Customized WAM-V base values from user -->
+      <mass value="24.0"/>
+      <inertia ixx="4.77" ixy="0.0" ixz="0.0" iyy="1.01" iyz="0.0" izz="5.78"/>
     </inertial>
   </link>
 
