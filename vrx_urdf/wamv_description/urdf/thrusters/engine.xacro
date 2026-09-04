@@ -3,10 +3,23 @@
   <!-- Macro for inserting an engine with its propeller. -->
   <xacro:macro name="engine" params="prefix position:='0 0 0' orientation:='0 0 0'">
     <link name="${namespace}/${prefix}_engine_link">
-      <visual>
+      <visual name="${prefix}_engine_housing_visual">
+        <origin xyz="-0.278156 0 -0.509371" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://wamv_description/models/engine/mesh/engine.dae"/>
+          <mesh filename="package://vrx_gz/models/roboboat01/meshes/housing.dae" scale="0.7 0.7 0.7"/>
         </geometry>
+        <material name="pure_black">
+          <color rgba="0.0 0.0 0.0 1.0"/>
+        </material>
+      </visual>
+      <visual name="${prefix}_engine_mount_visual">
+        <origin xyz="-0.278156 0 -0.509371" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://vrx_gz/models/roboboat01/meshes/mount.dae" scale="0.7 0.7 0.7"/>
+        </geometry>
+        <material name="pure_black">
+          <color rgba="0.0 0.0 0.0 1.0"/>
+        </material>
       </visual>
       <collision name="${prefix}_engine_vertical_axis_collision">
         <origin xyz="-0.16 0 -0.24" rpy="0 0 0" />
@@ -21,16 +34,21 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="15"/>
-        <inertia ixx="0.889245" ixy="0.0" ixz="0.0" iyy="0.911125" iyz="0.0" izz="0.078125"/>
+        <origin xyz="-0.278156 0 -0.409371" rpy="0 0 0"/>
+        <mass value="1.5"/>
+        <inertia ixx="0.088925" ixy="0.0" ixz="0.0" iyy="0.091112" iyz="0.0" izz="0.007812"/>
       </inertial>
     </link>
 
     <link name="${namespace}/${prefix}_propeller_link">
-      <visual>
+      <visual name="${prefix}_propeller_visual">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://wamv_description/models/propeller/mesh/propeller.dae"/>
+          <mesh filename="package://vrx_gz/models/roboboat01/meshes/prop.dae" scale="0.7 0.7 0.7"/>
         </geometry>
+        <material name="orange_prop">
+          <color rgba="1.0 0.4 0.0 1.0"/>
+        </material>
       </visual>
       <collision name="${prefix}_propeller_collision">
         <origin xyz="-0.08 0 0" rpy="0 1.57 0" />
@@ -39,8 +57,9 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.5"/>
-        <inertia ixx="0.008545" ixy="0.0" ixz="0.0" iyy="0.008545" iyz="0.0" izz="0.0144"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia ixx="0.000855" ixy="0.0" ixz="0.0" iyy="0.000855" iyz="0.0" izz="0.001440"/>
       </inertial>
     </link>
 
@@ -60,6 +79,32 @@
       <limit effort="100" velocity="100" />
       <dynamics friction="0.05" damping="0.05" />
     </joint>
+
+    <gazebo reference="${namespace}/${prefix}_engine_link">
+      <visual>
+        <material>
+          <ambient>0.005 0.005 0.005 1.0</ambient>
+          <diffuse>0.01 0.01 0.01 1.0</diffuse>
+          <specular>0.3 0.3 0.3 1.0</specular>
+          <pbr>
+            <metal>
+              <roughness>0.3</roughness>
+              <metalness>0.5</metalness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </gazebo>
+
+    <gazebo reference="${namespace}/${prefix}_propeller_link">
+      <visual>
+        <material>
+          <ambient>0.9 0.35 0.0 1.0</ambient>
+          <diffuse>1.0 0.4 0.0 1.0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+        </material>
+      </visual>
+    </gazebo>
   </xacro:macro>
 </robot>
 

@@ -97,14 +97,12 @@
   <!-- Basic model of the 16' WAM-V USV -->
   <link name="${namespace}/base_link">
     <!-- Main base hull (base.glb) -->
-    <visual name="base_visual">
+    <!-- Main base hull (base.glb) -->
+    <visual>
       <origin xyz="0 0 0.05" rpy="1.5708 0 3.14159"/>
       <geometry>
         <mesh filename="package://wamv_description/models/iacquabot_model/base.glb" scale="1.15 1.15 1.15"/>
       </geometry>
-      <material name="iacquabot_green">
-        <color rgba="0.18039 0.49020 0.19608 1.0"/>
-      </material>
     </visual>
 
     <!-- Left base collisions -->
@@ -130,14 +128,11 @@
 
   <!-- Front Bow (proa.STL) as separate link for PBR metallic material support -->
   <link name="${namespace}/proa_link">
-    <visual name="proa_visual">
+    <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
       <geometry>
         <mesh filename="package://wamv_description/models/iacquabot_model/proa.STL" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="iacquabot_dark_blue">
-        <color rgba="0.015 0.065 0.320 1.0"/>
-      </material>
     </visual>
   </link>
 
@@ -145,6 +140,22 @@
     <origin xyz="0.40 -0.22368 -0.02" rpy="0 0 0"/>
     <parent link="${namespace}/base_link"/>
     <child link="${namespace}/proa_link"/>
+  </joint>
+
+  <!-- Decal Link attached to Tablet (Logo & Name) -->
+  <link name="${namespace}/deck_decal_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.118 0.168 0.002"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="${namespace}/deck_decal_joint" type="fixed">
+    <origin xyz="0.0 0.01 -0.015" rpy="0 0 3.14159"/>
+    <parent link="${namespace}/tablet_link"/>
+    <child link="${namespace}/deck_decal_link"/>
   </joint>
 
   <gazebo>
@@ -156,7 +167,13 @@
       <material>
         <ambient>0.18039 0.49020 0.19608 1.0</ambient>
         <diffuse>0.18039 0.49020 0.19608 1.0</diffuse>
-        <specular>0.5 0.5 0.5 1.0</specular>
+        <specular>0.6 0.6 0.6 1.0</specular>
+        <pbr>
+          <metal>
+            <roughness>0.3</roughness>
+            <metalness>0.3</metalness>
+          </metal>
+        </pbr>
       </material>
     </visual>
 
@@ -182,16 +199,99 @@
       <material>
         <ambient>0.015 0.065 0.320 1.0</ambient>
         <diffuse>0.015 0.065 0.320 1.0</diffuse>
-        <specular>1.0 1.0 1.0 1.0</specular>
+        <specular>0.6 0.6 0.6 1.0</specular>
         <pbr>
           <metal>
-            <roughness>0.15</roughness>
-            <metalness>0.9</metalness>
+            <roughness>0.3</roughness>
+            <metalness>0.3</metalness>
           </metal>
         </pbr>
       </material>
     </visual>
   </gazebo>
+
+  <gazebo reference="${namespace}/deck_decal_link">
+    <visual>
+      <material>
+        <ambient>1.0 1.0 1.0 1.0</ambient>
+        <diffuse>1.0 1.0 1.0 1.0</diffuse>
+        <specular>0.3 0.3 0.3 1.0</specular>
+        <pbr>
+          <metal>
+            <albedo_map>model://wamv_description/models/iacquabot_model/iacquabot_deck_decal.png</albedo_map>
+            <roughness>0.3</roughness>
+            <metalness>0.0</metalness>
+          </metal>
+        </pbr>
+      </material>
+    </visual>
+  </gazebo>
+
+  <!-- Tablet Link (15cm in front of camera: X=0.45, Y=0.0, Z=0.17, scale=0.096, pitch=230 deg) -->
+  <link name="${namespace}/tablet_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
+      <geometry>
+        <mesh filename="package://wamv_description/models/iacquabot_model/tablet/scene.gltf" scale="0.096 0.096 0.096"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="${namespace}/tablet_joint" type="fixed">
+    <origin xyz="0.45 0.0 0.17" rpy="0 4.01426 0"/>
+    <parent link="${namespace}/base_link"/>
+    <child link="${namespace}/tablet_link"/>
+  </joint>
+
+  <link name="${namespace}/solar_panel_link">
+    <visual>
+      <origin xyz="0 2.5811 -0.1142" rpy="-1.5708 0 -1.5708"/>
+      <geometry>
+        <mesh filename="package://wamv_description/models/iacquabot_model/solar_panel/scene.gltf" scale="0.01235 0.00855 0.0095"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="${namespace}/solar_panel_joint" type="fixed">
+    <origin xyz="-0.10 0.0 0.12" rpy="0 0 0"/>
+    <parent link="${namespace}/base_link"/>
+    <child link="${namespace}/solar_panel_link"/>
+  </joint>
+
+  <!-- Gray Pole Link (Diameter: 1.5cm, Height: 50cm, 8cm next to camera) -->
+  <link name="${namespace}/camera_pole_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.0075" length="0.50"/>
+      </geometry>
+      <material name="gray_pole_mat">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="${namespace}/camera_pole_joint" type="fixed">
+    <origin xyz="0.30 0.08 0.33" rpy="0 0 0"/>
+    <parent link="${namespace}/base_link"/>
+    <child link="${namespace}/camera_pole_link"/>
+  </joint>
+
+  <!-- Router Link (Mounted on camera pole, 0.9x narrower, 1.5x taller, face forward) -->
+  <link name="${namespace}/router_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 3.14159"/>
+      <geometry>
+        <mesh filename="package://wamv_description/models/iacquabot_model/modelrouter/scene.gltf" scale="1.0 0.9 1.5"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="${namespace}/router_joint" type="fixed">
+    <origin xyz="0.03 0.0 0.15" rpy="0 0 0"/>
+    <parent link="${namespace}/camera_pole_link"/>
+    <child link="${namespace}/router_link"/>
+  </joint>
 
 
 </robot>
