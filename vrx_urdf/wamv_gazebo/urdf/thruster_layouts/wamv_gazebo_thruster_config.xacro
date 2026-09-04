@@ -12,6 +12,7 @@
       name="gz::sim::systems::Thruster">
       <joint_name>${namespace}/${name}_engine_propeller_joint</joint_name>
       <!-- Empirical and physical parameters of the BlueRobotics T200 Thruster -->
+      <cmd_timeout>0.5</cmd_timeout>
       <thrust_coefficient>0.1079</thrust_coefficient>
       <fluid_density>1000</fluid_density>
       <propeller_diameter>0.0762</propeller_diameter>

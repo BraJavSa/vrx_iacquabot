@@ -26,6 +26,13 @@ class ThrusterModelNode(Node):
         self.C_neg = 0.9713
         self.M_neg = -1.0000
         
+        # Timeout tracking for thruster commands (0.5s watchdog)
+        self.last_lf_time = None
+        self.last_lr_time = None
+        self.last_rf_time = None
+        self.last_rr_time = None
+        self.timeout_sec = 0.5
+        
         # Subscriptions: Normalized command topics in range [-1.0, 1.0] (relative to namespace)
         self.sub_lf_cmd = self.create_subscription(Float64, 'thrusters/left_front/cmd', self.lf_cmd_callback, 10)
         self.sub_lr_cmd = self.create_subscription(Float64, 'thrusters/left_rear/cmd', self.lr_cmd_callback, 10)
@@ -38,7 +45,10 @@ class ThrusterModelNode(Node):
         self.pub_rf_thrust = self.create_publisher(Float64, 'thrusters/right_front/thrust', 10)
         self.pub_rr_thrust = self.create_publisher(Float64, 'thrusters/right_rear/thrust', 10)
         
-        self.get_logger().info("Asymmetric Richard's Thruster Model Node initialized (namespaced).")
+        # Watchdog timer running at 20Hz (every 0.05s) to enforce command timeout
+        self.watchdog_timer = self.create_timer(0.05, self.watchdog_callback)
+        
+        self.get_logger().info("Asymmetric Richard's Thruster Model Node initialized with 0.5s timeout.")
 
     def compute_thrust(self, cmd):
         if abs(cmd) <= 0.01:
@@ -61,6 +71,7 @@ class ThrusterModelNode(Node):
             return thrust
 
     def lf_cmd_callback(self, msg):
+        self.last_lf_time = self.get_clock().now().nanoseconds * 1e-9
         cmd = msg.data
         thrust_val = self.compute_thrust(cmd)
         out_msg = Float64()
@@ -68,6 +79,7 @@ class ThrusterModelNode(Node):
         self.pub_lf_thrust.publish(out_msg)
 
     def lr_cmd_callback(self, msg):
+        self.last_lr_time = self.get_clock().now().nanoseconds * 1e-9
         cmd = msg.data
         thrust_val = self.compute_thrust(cmd)
         out_msg = Float64()
@@ -75,6 +87,7 @@ class ThrusterModelNode(Node):
         self.pub_lr_thrust.publish(out_msg)
 
     def rf_cmd_callback(self, msg):
+        self.last_rf_time = self.get_clock().now().nanoseconds * 1e-9
         cmd = msg.data
         thrust_val = self.compute_thrust(cmd)
         out_msg = Float64()
@@ -82,11 +95,29 @@ class ThrusterModelNode(Node):
         self.pub_rf_thrust.publish(out_msg)
 
     def rr_cmd_callback(self, msg):
+        self.last_rr_time = self.get_clock().now().nanoseconds * 1e-9
         cmd = msg.data
         thrust_val = self.compute_thrust(cmd)
         out_msg = Float64()
         out_msg.data = thrust_val
         self.pub_rr_thrust.publish(out_msg)
+
+    def watchdog_callback(self):
+        now_sec = self.get_clock().now().nanoseconds * 1e-9
+        zero_msg = Float64()
+        zero_msg.data = 0.0
+
+        if self.last_lf_time is not None and (now_sec - self.last_lf_time) > self.timeout_sec:
+            self.pub_lf_thrust.publish(zero_msg)
+
+        if self.last_lr_time is not None and (now_sec - self.last_lr_time) > self.timeout_sec:
+            self.pub_lr_thrust.publish(zero_msg)
+
+        if self.last_rf_time is not None and (now_sec - self.last_rf_time) > self.timeout_sec:
+            self.pub_rf_thrust.publish(zero_msg)
+
+        if self.last_rr_time is not None and (now_sec - self.last_rr_time) > self.timeout_sec:
+            self.pub_rr_thrust.publish(zero_msg)
 
 def main(args=None):
     rclpy.init(args=args)
