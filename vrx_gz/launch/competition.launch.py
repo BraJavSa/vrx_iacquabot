@@ -38,6 +38,14 @@ def launch(context, *args, **kwargs):
     robot_name = LaunchConfiguration('name').perform(context)
     model_type = LaunchConfiguration('model').perform(context)
 
+    x_pos = LaunchConfiguration('x').perform(context)
+    y_pos = LaunchConfiguration('y').perform(context)
+    z_pos = LaunchConfiguration('z').perform(context)
+    r_rot = LaunchConfiguration('R').perform(context)
+    p_rot = LaunchConfiguration('P').perform(context)
+    y_rot = LaunchConfiguration('Y').perform(context)
+    position = [x_pos, y_pos, z_pos, r_rot, p_rot, y_rot]
+
     launch_processes = []
 
     models = []
@@ -45,7 +53,7 @@ def launch(context, *args, **kwargs):
         with open(config_file, 'r') as stream:
             models = Model.FromConfig(stream)
     else:
-      m = Model(robot_name, model_type, [-532, 162, 0, 0, 0, 1])
+      m = Model(robot_name, model_type, position)
       if robot_urdf and robot_urdf != '':
           m.set_urdf(robot_urdf)
       models.append(m)
@@ -117,5 +125,29 @@ def generate_launch_description():
             'model',
             default_value='wam-v',
             description='SDF model to spawn'),
+        DeclareLaunchArgument(
+            'x',
+            default_value='0',
+            description='X position to spawn'),
+        DeclareLaunchArgument(
+            'y',
+            default_value='0',
+            description='Y position to spawn'),
+        DeclareLaunchArgument(
+            'z',
+            default_value='0',
+            description='Z position to spawn'),
+        DeclareLaunchArgument(
+            'R',
+            default_value='0',
+            description='R rotation to spawn'),
+        DeclareLaunchArgument(
+            'P',
+            default_value='0',
+            description='P rotation to spawn'),
+        DeclareLaunchArgument(
+            'Y',
+            default_value='0',
+            description='Y rotation to spawn'),
         OpaqueFunction(function=launch),
     ])

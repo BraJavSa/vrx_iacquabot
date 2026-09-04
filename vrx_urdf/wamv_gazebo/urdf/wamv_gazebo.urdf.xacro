@@ -121,7 +121,7 @@
   <xacro:unless value="$(arg yaml_component_generation)">
     <!-- Add a front camera -->
     <xacro:if value="$(arg camera_enabled)">
-      <xacro:wamv_camera name="front_camera" y="0.3" x="0.75" P="${radians(15)}" />
+      <xacro:wamv_camera name="front_camera" x="0.30" y="0.0" z="0.40" post_z_from="0.05" P="${radians(15)}" />
     </xacro:if>
 
     <!-- Add simulated GPS -->
@@ -131,7 +131,7 @@
 
     <!-- Add Simulated IMU -->
     <xacro:if value="$(arg imu_enabled)">
-      <xacro:wamv_imu name="imu_wamv" y="-0.2" />
+      <xacro:wamv_imu name="imu_wamv" x="0.0" y="0.0" z="0.10" />
     </xacro:if>
 
     <!-- Add 3D LIDAR -->
@@ -172,7 +172,7 @@
       <xacro:wamv_gps name="gps_wamv" x="-0.85" />
 
       <!-- Add Simulated IMU -->
-      <xacro:wamv_imu name="imu_wamv" y="-0.2" />
+      <xacro:wamv_imu name="imu_wamv" x="0.0" y="0.0" z="0.10" />
 
       <!-- Add 3D LIDAR -->
       <xacro:lidar name="lidar_wamv" type="16_beam"/>

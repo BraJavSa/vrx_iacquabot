@@ -96,10 +96,15 @@
 
   <!-- Basic model of the 16' WAM-V USV -->
   <link name="${namespace}/base_link">
-    <visual>
+    <!-- Main base hull (base.glb) -->
+    <visual name="base_visual">
+      <origin xyz="0 0 0.05" rpy="1.5708 0 3.14159"/>
       <geometry>
-        <mesh filename="package://wamv_description/models/WAM-V-Base/mesh/WAM-V-Base.dae"/>
+        <mesh filename="package://wamv_description/models/iacquabot_model/base.glb" scale="1.15 1.15 1.15"/>
       </geometry>
+      <material name="iacquabot_green">
+        <color rgba="0.18039 0.49020 0.19608 1.0"/>
+      </material>
     </visual>
 
     <!-- Left base collisions -->
@@ -123,6 +128,25 @@
     </inertial>
   </link>
 
+  <!-- Front Bow (proa.STL) as separate link for PBR metallic material support -->
+  <link name="${namespace}/proa_link">
+    <visual name="proa_visual">
+      <origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
+      <geometry>
+        <mesh filename="package://wamv_description/models/iacquabot_model/proa.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="iacquabot_dark_blue">
+        <color rgba="0.015 0.065 0.320 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="${namespace}/proa_joint" type="fixed">
+    <origin xyz="0.40 -0.22368 -0.02" rpy="0 0 0"/>
+    <parent link="${namespace}/base_link"/>
+    <child link="${namespace}/proa_link"/>
+  </joint>
+
   <gazebo>
     <enable_wind>true</enable_wind>
   </gazebo>
@@ -130,16 +154,9 @@
   <gazebo reference="${namespace}/base_link">
     <visual>
       <material>
-        <diffuse>1.0 1.0 1.0</diffuse>
-        <specular>1.0 1.0 1.0</specular>
-        <pbr>
-          <metal>
-            <albedo_map>model://wamv_description/models/WAM-V-Base/mesh/WAM-V_Albedo.png</albedo_map>
-            <normal_map>model://wamv_description/models/WAM-V-Base/mesh/WAM-V_Normal.png</normal_map>
-            <roughness_map>model://wamv_description/models/WAM-V-Base/mesh/WAM-V_Roughness.png</roughness_map>
-            <metalness_map>model://wamv_description/models/WAM-V-Base/mesh/WAM-V_Metalness.png</metalness_map>
-          </metal>
-        </pbr>
+        <ambient>0.18039 0.49020 0.19608 1.0</ambient>
+        <diffuse>0.18039 0.49020 0.19608 1.0</diffuse>
+        <specular>0.5 0.5 0.5 1.0</specular>
       </material>
     </visual>
 
@@ -158,6 +175,22 @@
       <always_on>1</always_on>
       <update_rate>5</update_rate>
     </sensor>
+  </gazebo>
+
+  <gazebo reference="${namespace}/proa_link">
+    <visual>
+      <material>
+        <ambient>0.015 0.065 0.320 1.0</ambient>
+        <diffuse>0.015 0.065 0.320 1.0</diffuse>
+        <specular>1.0 1.0 1.0 1.0</specular>
+        <pbr>
+          <metal>
+            <roughness>0.15</roughness>
+            <metalness>0.9</metalness>
+          </metal>
+        </pbr>
+      </material>
+    </visual>
   </gazebo>
 
 
