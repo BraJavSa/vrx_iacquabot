@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="usv_dynamics_gazebo" params="name wavefield_size:=1000">
-    <!--Gazebo Plugin for simulating WAM-V dynamics-->
+    <!--Gazebo Plugin for simulating board dynamics-->
     <gazebo>
       <!-- Left hull -->
       <plugin
         filename="libSurface.so"
         name="vrx::Surface">
         <link_name>${namespace}/base_link</link_name>
-        <hull_length>4.9</hull_length>
-        <hull_radius>0.213</hull_radius>
+        <hull_length>1.2</hull_length>
+        <hull_radius>0.15</hull_radius>
         <fluid_level>0</fluid_level>
         <points>
-          <point>0.6 1.03 0</point>
-          <point>-1.4 1.03 0</point>
+          <point>0.6 0.169 0</point>
+          <point>-0.6 0.169 0</point>
         </points>
         <wavefield>
           <topic>/vrx/wavefield/parameters</topic>
@@ -25,40 +25,42 @@
         filename="libSurface.so"
         name="vrx::Surface">
         <link_name>${namespace}/base_link</link_name>
-        <hull_length>4.9</hull_length>
-        <hull_radius>0.213</hull_radius>
+        <hull_length>1.2</hull_length>
+        <hull_radius>0.15</hull_radius>
         <fluid_level>0</fluid_level>
         <points>
-          <point>0.6 -1.03 0</point>
-          <point>-1.4 -1.03 0</point>
+          <point>0.6 -0.169 0</point>
+          <point>-0.6 -0.169 0</point>
         </points>
         <wavefield>
           <topic>/vrx/wavefield/parameters</topic>
         </wavefield>
       </plugin>
 
-      <plugin
+    <plugin
         filename="libSimpleHydrodynamics.so"
         name="vrx::SimpleHydrodynamics">
         <link_name>${namespace}/base_link</link_name>
         <!-- Added mass -->
-        <xDotU>0.0</xDotU>
-        <yDotV>0.0</yDotV>
-        <nDotR>0.0</nDotR>
-        <!-- Linear and quadratic drag -->
-        <xU>23.0</xU>
-        <xUU>38.0</xUU>
-        <yV>40.0</yV>
-        <yVV>30.0</yVV>
-        <zW>500.0</zW>
-        <kP>100.0</kP>
-        <kPP>100.0</kPP>
-        <mQ>100.0</mQ>
-        <mQQ>100.0</mQQ>
-        <nR>100.0</nR>
-        <nRR>10.0</nRR>
+        <xDotU>2.85</xDotU>
+        <yDotV>8.36</yDotV>
+        <nDotR>2.34</nDotR>
+        
+        <!-- Arrastres Lineales y Cuadráticos Optimizados -->
+        <xU>13.91</xU>
+        <xUU>14.92</xUU>
+        <yV>49.04</yV>
+        <yVV>1.01</yVV>
+        <nR>6.03</nR>
+        <nRR>2.91</nRR>
+        
+        <!-- ESTOS ERAN LOS CULPABLES (Bájalos drásticamente) -->
+        <zW>20.0</zW>    <!-- Fricción vertical (Heave) -->
+        <kP>2.0</kP>     <!-- Fricción de balanceo (Roll) -->
+        <kPP>2.0</kPP>
+        <mQ>5.0</mQ>     <!-- Fricción de cabeceo (Pitch) -->
+        <mQQ>5.0</mQQ>
       </plugin>
-
     </gazebo>
   </xacro:macro>
 </robot>
