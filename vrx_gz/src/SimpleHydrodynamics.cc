@@ -199,7 +199,6 @@ void SimpleHydrodynamics::PreUpdate(
 
   Eigen::VectorXd stateDot = Eigen::VectorXd(6);
   Eigen::VectorXd state    = Eigen::VectorXd(6);
-  Eigen::MatrixXd Cmat     = Eigen::MatrixXd::Zero(6, 6);
   Eigen::MatrixXd Dmat     = Eigen::MatrixXd::Zero(6, 6);
 
   // Get vehicle state.
@@ -249,12 +248,21 @@ void SimpleHydrodynamics::PreUpdate(
   // Added Mass.
   const Eigen::VectorXd kAmassVec = -1.0 * this->dataPtr->Ma * stateDot;
 
-  // Coriolis - added mass components.
-  Cmat(0, 5) = this->dataPtr->paramYdotV * localLinearVel.Y();
-  Cmat(1, 5) = this->dataPtr->paramXdotU * localLinearVel.X();
-  Cmat(5, 0) = this->dataPtr->paramYdotV * localLinearVel.Y();
-  Cmat(5, 1) = this->dataPtr->paramXdotU * localLinearVel.X();
-  const Eigen::VectorXd kCmat = Cmat * state;
+  // Planar added-mass Coriolis force consistent with the standard Fossen
+  // model. Gazebo already applies the rigid-body Coriolis terms. Therefore
+  // this plugin must add -C_A(nu) * nu, where
+  // C_A = [[0, 0, -YdotV*v], [0, 0, XdotU*u],
+  //        [YdotV*v, -XdotU*u, 0]].
+  // This yields [YdotV*v*r, -XdotU*u*r,
+  //              (XdotU-YdotV)*u*v]^T and makes the complete 3-DOF model
+  // satisfy C(nu) with M = M_RB + M_A.
+  Eigen::VectorXd kCmat = Eigen::VectorXd::Zero(6);
+  kCmat(0) = this->dataPtr->paramYdotV * localLinearVel.Y() *
+    localAngularVel.Z();
+  kCmat(1) = -this->dataPtr->paramXdotU * localLinearVel.X() *
+    localAngularVel.Z();
+  kCmat(5) = (this->dataPtr->paramXdotU - this->dataPtr->paramYdotV) *
+    localLinearVel.X() * localLinearVel.Y();
 
   // Drag.
   Dmat(0, 0) = this->dataPtr->paramXu +
