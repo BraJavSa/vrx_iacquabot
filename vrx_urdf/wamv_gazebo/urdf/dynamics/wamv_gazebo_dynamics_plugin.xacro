@@ -44,9 +44,9 @@
           filename="libSimpleHydrodynamics.so"
           name="vrx::SimpleHydrodynamics">
           <link_name>${namespace}/base_link</link_name>
-          <xDotU>-1.426</xDotU>   <!-- ζ1 - m = 24.77 - 23.344 -->
-          <yDotV>-6.936</yDotV>   <!-- ζ2 - m = 30.28 - 23.344 -->
-          <nDotR>-2.006688</nDotR> <!-- ζ3 - Iz = 4.93 - 2.923312 -->
+          <xDotU>1.426</xDotU>  
+          <yDotV>6.936</yDotV>   
+          <nDotR>2.006688</nDotR> 
           <xU>13.91</xU>
           <xUU>14.92</xUU>
           <yV>49.04</yV>

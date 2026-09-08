@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <plugin xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="wamv_gazebo_thruster_config" params="name">
+  <xacro:macro name="wamv_gazebo_thruster_config" params="name thrust_coefficient:='0.1079'">
 
   <gazebo>
     <plugin
@@ -8,7 +8,7 @@
       name="gz::sim::systems::Thruster">
       <joint_name>${namespace}/${name}_engine_propeller_joint</joint_name>
       <cmd_timeout>0.5</cmd_timeout>
-      <thrust_coefficient>0.1079</thrust_coefficient>
+      <thrust_coefficient>${thrust_coefficient}</thrust_coefficient>
       <fluid_density>1000</fluid_density>
       <propeller_diameter>0.0762</propeller_diameter>
       <velocity_control>false</velocity_control>

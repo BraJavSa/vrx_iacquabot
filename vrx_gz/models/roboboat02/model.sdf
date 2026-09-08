@@ -559,7 +559,7 @@
       name="gz::sim::systems::Thruster">
       <joint_name>right_engine_propeller_joint</joint_name>
       <cmd_timeout>0.5</cmd_timeout>
-      <thrust_coefficient>0.0001</thrust_coefficient>
+      <thrust_coefficient>-0.0001</thrust_coefficient>
       <fluid_density>1000</fluid_density>
       <propeller_diameter>0.1</propeller_diameter>
       <velocity_control>true</velocity_control>

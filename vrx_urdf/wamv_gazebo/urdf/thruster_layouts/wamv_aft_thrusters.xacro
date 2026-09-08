@@ -5,7 +5,7 @@
   <xacro:engine prefix="right" position="-0.10 -0.20 0.468237" />
 
   <xacro:include filename="$(find wamv_gazebo)/urdf/thruster_layouts/wamv_gazebo_thruster_config.xacro" />
-  <xacro:wamv_gazebo_thruster_config name="left" />
-  <xacro:wamv_gazebo_thruster_config name="right" />
+  <xacro:wamv_gazebo_thruster_config name="left" thrust_coefficient="0.1079" />
+  <xacro:wamv_gazebo_thruster_config name="right" thrust_coefficient="-0.1079" />
 
 </robot>
