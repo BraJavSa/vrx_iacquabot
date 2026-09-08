@@ -1,17 +1,12 @@
 <?xml version="1.0"?>
 <plugin xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro  name="wamv_gazebo_thruster_config" params="name">
+  <xacro:macro name="wamv_gazebo_thruster_config" params="name">
 
   <gazebo>
-    <xacro:property name="x_uu" value="72.4" />
-    <xacro:property name="x_u" value="51.3" />
-    <xacro:property name="max_velocity_mps" value="7.71667" />
-
     <plugin
       filename="gz-sim-thruster-system"
       name="gz::sim::systems::Thruster">
       <joint_name>${namespace}/${name}_engine_propeller_joint</joint_name>
-      <!-- Empirical and physical parameters of the BlueRobotics T200 Thruster -->
       <cmd_timeout>0.5</cmd_timeout>
       <thrust_coefficient>0.1079</thrust_coefficient>
       <fluid_density>1000</fluid_density>
@@ -20,7 +15,6 @@
       <max_thrust_cmd>36.3827</max_thrust_cmd>
       <namespace>${namespace}</namespace>
       <topic>thrusters/${name}/thrust</topic>
-      <!-- Not used by Gazebo but used to run the bridge easily -->
       <name>${name}</name>
     </plugin>
 
@@ -30,7 +24,6 @@
       <joint_name>${namespace}/${name}_chassis_engine_joint</joint_name>
       <use_velocity_commands>true</use_velocity_commands>
       <topic>${namespace}/thrusters/${name}/pos</topic>
-      <!-- Not used by Gazebo but used to run the bridge easily -->
       <name>${name}</name>
     </plugin>
   </gazebo>

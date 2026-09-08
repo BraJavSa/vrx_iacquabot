@@ -3,63 +3,63 @@
   <xacro:macro name="usv_dynamics_gazebo" params="name wavefield_size:=1000">
     <!--Gazebo Plugin for simulating board dynamics-->
     <gazebo>
-      <!-- Left hull -->
+      <!-- Lado izquierdo -->
       <plugin
         filename="libSurface.so"
         name="vrx::Surface">
         <link_name>${namespace}/base_link</link_name>
         <hull_length>1.2</hull_length>
-        <hull_radius>0.15</hull_radius>
+        <hull_radius>0.25</hull_radius>
         <fluid_level>0</fluid_level>
         <points>
-          <point>0.6 0.169 0</point>
-          <point>-0.6 0.169 0</point>
+          <point>0.55  0.25 0</point>
+          <point>0.0   0.25 0</point>
+          <point>-0.55 0.25 0</point>
         </points>
         <wavefield>
           <topic>/vrx/wavefield/parameters</topic>
         </wavefield>
       </plugin>
 
-      <!-- Right hull -->
+      <!-- Lado derecho (corregido: antes estaba en 0.169, asimétrico respecto
+           al izquierdo en 0.25 — esa asimetría causaba roll constante) -->
       <plugin
         filename="libSurface.so"
         name="vrx::Surface">
         <link_name>${namespace}/base_link</link_name>
         <hull_length>1.2</hull_length>
-        <hull_radius>0.15</hull_radius>
+        <hull_radius>0.25</hull_radius>
         <fluid_level>0</fluid_level>
         <points>
-          <point>0.6 -0.169 0</point>
-          <point>-0.6 -0.169 0</point>
+          <point>0.55  -0.25 0</point>
+          <point>0.0   -0.25 0</point>
+          <point>-0.55 -0.25 0</point>
         </points>
         <wavefield>
           <topic>/vrx/wavefield/parameters</topic>
         </wavefield>
       </plugin>
 
-    <plugin
-        filename="libSimpleHydrodynamics.so"
-        name="vrx::SimpleHydrodynamics">
-        <link_name>${namespace}/base_link</link_name>
-        <!-- Added mass -->
-        <xDotU>2.85</xDotU>
-        <yDotV>8.36</yDotV>
-        <nDotR>2.34</nDotR>
-        
-        <!-- Arrastres Lineales y Cuadráticos Optimizados -->
-        <xU>13.91</xU>
-        <xUU>14.92</xUU>
-        <yV>49.04</yV>
-        <yVV>1.01</yVV>
-        <nR>6.03</nR>
-        <nRR>2.91</nRR>
-        
-        <!-- ESTOS ERAN LOS CULPABLES (Bájalos drásticamente) -->
-        <zW>20.0</zW>    <!-- Fricción vertical (Heave) -->
-        <kP>2.0</kP>     <!-- Fricción de balanceo (Roll) -->
-        <kPP>2.0</kPP>
-        <mQ>5.0</mQ>     <!-- Fricción de cabeceo (Pitch) -->
-        <mQQ>5.0</mQQ>
+      <plugin
+          filename="libSimpleHydrodynamics.so"
+          name="vrx::SimpleHydrodynamics">
+          <link_name>${namespace}/base_link</link_name>
+          <xDotU>2.85</xDotU>
+          <yDotV>8.36</yDotV>
+          <nDotR>1.957</nDotR>
+
+          <xU>13.91</xU>
+          <xUU>14.92</xUU>
+          <yV>49.04</yV>
+          <yVV>1.01</yVV>
+          <nR>6.03</nR>
+          <nRR>2.91</nRR>
+
+          <zW>60.0</zW>
+          <kP>8.0</kP>
+          <kPP>8.0</kPP>
+          <mQ>2.0</mQ>
+          <mQQ>2.0</mQQ>
       </plugin>
     </gazebo>
   </xacro:macro>

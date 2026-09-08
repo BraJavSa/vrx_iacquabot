@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="wam-v-two-engines">
-  <!-- Macro for inserting an engine with its propeller. -->
   <xacro:macro name="engine" params="prefix position:='0 0 0' orientation:='0 0 0'">
     <link name="${namespace}/${prefix}_engine_link">
       <visual name="${prefix}_engine_housing_visual">
         <origin xyz="-0.278156 0 -0.509371" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://vrx_gz/models/roboboat01/meshes/housing.dae" scale="0.7 0.7 0.7"/>
+          <mesh filename="package://vrx_gz/models/roboboat01/meshes/housing.dae" scale="1.0 1.0 1.0"/>
         </geometry>
         <material name="pure_black">
           <color rgba="0.0 0.0 0.0 1.0"/>
@@ -15,7 +14,7 @@
       <visual name="${prefix}_engine_mount_visual">
         <origin xyz="-0.278156 0 -0.509371" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://vrx_gz/models/roboboat01/meshes/mount.dae" scale="0.7 0.7 0.7"/>
+          <mesh filename="package://vrx_gz/models/roboboat01/meshes/mount.dae" scale="1.0 1.0 1.0"/>
         </geometry>
         <material name="pure_black">
           <color rgba="0.0 0.0 0.0 1.0"/>
@@ -24,7 +23,7 @@
       <collision name="${prefix}_engine_vertical_axis_collision">
         <origin xyz="-0.16 0 -0.24" rpy="0 0 0" />
         <geometry>
-          <box size="0.2 0.15 0.83" />
+          <box size="0.2 0.15 1.03" />
         </geometry>
       </collision>
       <collision name="${prefix}_engine_rear_end_collision">
@@ -33,10 +32,12 @@
           <box size="0.12 0.15 0.12" />
         </geometry>
       </collision>
+      <!-- Masa real del T200 (0.344 kg), pero inercia con piso numérico
+           razonable para que el solver no se vuelva inestable/degenerado. -->
       <inertial>
         <origin xyz="-0.278156 0 -0.409371" rpy="0 0 0"/>
-        <mass value="1.5"/>
-        <inertia ixx="0.088925" ixy="0.0" ixz="0.0" iyy="0.091112" iyz="0.0" izz="0.007812"/>
+        <mass value="0.344"/>
+        <inertia ixx="0.005" ixy="0.0" ixz="0.0" iyy="0.005" iyz="0.0" izz="0.002"/>
       </inertial>
     </link>
 
@@ -44,7 +45,7 @@
       <visual name="${prefix}_propeller_visual">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://vrx_gz/models/roboboat01/meshes/prop.dae" scale="0.7 0.7 0.7"/>
+          <mesh filename="package://vrx_gz/models/roboboat01/meshes/prop.dae" scale="1.0 1.0 1.0"/>
         </geometry>
         <material name="orange_prop">
           <color rgba="1.0 0.4 0.0 1.0"/>
@@ -56,10 +57,12 @@
           <cylinder length="0.18" radius="0.24" />
         </geometry>
       </collision>
+      <!-- Masa real de la hélice (0.012 kg), inercia con piso numérico
+           (no la real de ~1e-6, que hacía fallar al solver del joint continuo). -->
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="0.05"/>
-        <inertia ixx="0.000855" ixy="0.0" ixz="0.0" iyy="0.000855" iyz="0.0" izz="0.001440"/>
+        <mass value="0.012"/>
+        <inertia ixx="0.0005" ixy="0.0" ixz="0.0" iyy="0.0005" iyz="0.0" izz="0.0003"/>
       </inertial>
     </link>
 
@@ -107,4 +110,3 @@
     </gazebo>
   </xacro:macro>
 </robot>
-
